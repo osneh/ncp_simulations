@@ -12,7 +12,6 @@
 #include "G4PVPlacement.hh"
 #include "G4UserLimits.hh"
 #include "G4VisAttributes.hh"
-#include "globals.hh"
 #include "G4Cache.hh"
 
 
@@ -24,6 +23,9 @@ class DetectorMessenger;
 class G4UserLimits;
 class G4Box;
 class G4Tubs;
+
+class F02ElectricFieldSetup;
+class G4GlobalMagFieldMessenger;
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -42,6 +44,7 @@ public:
   inline const G4Material* GetMaterial() const     {return fMaterial;};
 
   G4double GetWorldSizeZ() const                {return fWorldSizeZ;}; // Added by Henso
+  G4double GetTargetHalfHeight() const          {return fTargetHeight*0.5;}; // Added by Henso
 
   void   PrintParameters();
   void   DefineMaterials(); 
@@ -49,7 +52,10 @@ public:
 
   G4Region* GetTargetRegion()  {return fRegion;}
   //G4Region* GetWorldRegion()  {return fWorld;}
-                         
+
+  void ConstructSDandField() override;
+
+
 private:
    
   G4double           fWorldSizeX;
@@ -82,5 +88,9 @@ private:
   DetectorMessenger* fDetectorMessenger;
 
   G4VPhysicalVolume* ConstructDetector();     
+  
+  G4Cache<F02ElectricFieldSetup*> fEmFieldSetup;
+  G4Cache<G4GlobalMagFieldMessenger*> fEmFieldMessenger;
+
 };
 #endif

@@ -17,6 +17,10 @@
 #include "G4PhysicalConstants.hh"
 #include "G4AutoDelete.hh"
 
+#include "G4SolidStore.hh"
+#include "G4AutoDelete.hh"
+#include "G4SDManager.hh"
+#include "F02ElectricFieldSetup.hh"
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -269,5 +273,37 @@ void DetectorConstruction::SetSize(G4double value)
     fSolidWorld->SetZHalfLength(fWorldSizeZ/2);
   }
   
+}
+
+void DetectorConstruction::ConstructSDandField()
+{
+
+
+  //SensitiveDetector * sensDetTop = new SensitiveDetector("SensitiveDetectorTop");
+  //fLogicDetectorTop->SetSensitiveDetector(sensDetTop);
+
+
+
+  //SensitiveDetector * sensDet = new SensitiveDetector("SensitiveDetector");
+  //fLogicDetector->SetSensitiveDetector(sensDet);
+
+  //if ( fFieldMessenger.Get() == 0 ) {
+  if ( !fEmFieldMessenger.Get()  ) {
+
+    // Create global magnetic field messenger.
+    // Uniform magnetic field is then created automatically if
+    // the field value is not zero.
+    //G4ThreeVector fieldValue = G4ThreeVector();
+    //G4GlobalMagFieldMessenger* msg =
+    //  new G4GlobalMagFieldMessenger(fieldValue);
+    //msg->SetVerboseLevel(1);
+    //G4AutoDelete::Register(msg);
+    //:0fFieldMessenger.Put( msg );
+
+    F02ElectricFieldSetup* fieldSetup = new F02ElectricFieldSetup();
+    G4AutoDelete::Register(fieldSetup); //Kernel will delete the messenger
+    fEmFieldSetup.Put(fieldSetup);
+
+  }
 }
 
