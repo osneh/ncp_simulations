@@ -57,8 +57,34 @@ There is a configuration file provided needed to run the simulation: ncp_sim.mac
 
 The current example ncp_sim.mac file looks like this:
 ```
-/run/printProgress 1000
-/run/beamOn 50000
+#/control/execute vis.mac
+/tracking/verbose 1
+
+
+#/microelectronics/det/setMat G4_Ag
+#/microelectronics/det/setMat G4_Al
+#/microelectronics/det/setMat G4_C
+#/microelectronics/det/setMat G4_Cu
+#/microelectronics/det/setMat G4_Ge
+#/microelectronics/det/setMat G4_KAPTON
+#/microelectronics/det/setMat G4_Ni
+#/microelectronics/det/setMat G4_Si   # default material
+#/microelectronics/det/setMat G4_SILICON_DIOXIDE
+#/microelectronics/det/setMat G4_Ti
+#/microelectronics/det/setMat G4_W
+
+
+#/gun/particle ion
+#/gun/ion 20 48 15
+/gun/particle e-
+/gun/energy 300 eV
+
+#/run/numberOfThreads 2 #if MT is activated
+
+/run/initialize
+#/run/printProgress 1
+/run/beamOn 1
+
 ```
 
 This will run 50,000 events and print the progress every 1,000 events.
