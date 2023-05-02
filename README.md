@@ -1,5 +1,5 @@
 # Nano Channel Plate SIMULATION
-GEANT4 Simulation for a Nano Channel Plate, a Nano tube with an emisive layer for Secondary Electron Yield (SEY) prodcution. The current configuration includes the a developement (physics processes) implemented by the ONERA Group (C. Inguimbert). This new model has an optimization of the stopping power for low energy particles and takes into account the work function and for certain marerials when needed phonon interactions in order to simulate properly the SEY for several materials.
+**GEANT4** Simulation for a Nano Channel Plate, a Nano tube with an emisive layer for Secondary Electron Yield (SEY) prodcution. The current configuration includes the a developement (physics processes) implemented by **the ONERA Group (C. Inguimbert)**. This new model has an optimization of the stopping power for low energy particles and takes into account the work function and for certain marerials when needed phonon interactions in order to simulate properly the SEY for several materials.
 
 
 
@@ -91,5 +91,5 @@ The current example ncp_sim.mac file looks like this:
 
 ```
 
-This will run 50,000 events and print the progress every 1,000 events.
+**This will run 1 event and print the progress every 1 event. It will be enough, because a single injected electron is expected to produce 10^6 output secondaries.** 
 
