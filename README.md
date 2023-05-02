@@ -57,7 +57,7 @@ To run the simulation, use the created executable with a configuration file (a s
 
 There is a configuration file provided needed to run the simulation: ncp_sim.mac
 
-#### run.mac
+#### ncp_sim.mac
 
 The current example ncp_sim.mac file looks like this:
 ```
