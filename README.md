@@ -43,6 +43,10 @@ Use CMake to then build and make the simulation executable
 cmake .. && make
 ```
 
+In addition, in order to include microelectronics (ONERA) latest models and data
+into the simulation, please copy the content of the data.7z at
+G4installPATH/share/Geant4-11.0.3/data/G4EMLOW8.0/microelec
+
 To run the simulation, use the created executable with a configuration file (a sample is provided)
 
 ```
