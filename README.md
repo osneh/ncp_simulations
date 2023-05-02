@@ -63,5 +63,3 @@ The current example ncp_sim.mac file looks like this:
 
 This will run 50,000 events and print the progress every 1,000 events.
 
-
-## Integrate with your tools
