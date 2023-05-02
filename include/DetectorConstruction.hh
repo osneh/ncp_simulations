@@ -14,6 +14,7 @@
 #include "G4VisAttributes.hh"
 #include "G4Cache.hh"
 
+#include "SensitiveDetector.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -86,11 +87,15 @@ private:
   G4UserLimits* fStepLimit;
 
   DetectorMessenger* fDetectorMessenger;
-
   G4VPhysicalVolume* ConstructDetector();     
   
   G4Cache<F02ElectricFieldSetup*> fEmFieldSetup;
   G4Cache<G4GlobalMagFieldMessenger*> fEmFieldMessenger;
+
+
+  G4LogicalVolume*   fLogicDetector;  // Sensitive Detector 
+  G4LogicalVolume*   fLogicDetectorTop;  // Sensitive Detector TOP
+
 
 };
 #endif

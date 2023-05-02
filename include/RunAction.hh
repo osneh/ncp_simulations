@@ -30,6 +30,7 @@
 #define RunAction_h 1
 
 #include "G4UserRunAction.hh"
+#include "G4AnalysisManager.hh" // added by Henso 25.04.2023
 #include "globals.hh"
 #include <iostream>
 

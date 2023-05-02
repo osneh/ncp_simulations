@@ -35,6 +35,13 @@
 #include "G4AnalysisManager.hh"
 #include "G4Threading.hh"
 
+#include "Run.hh"
+#include "G4Run.hh"
+#include "G4UnitsTable.hh"
+#include "G4EmCalculator.hh"
+#include <iomanip>
+
+
 void PrintNParticles(std::map<const G4ParticleDefinition*, int>& container);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -70,6 +77,25 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     BeginMaster(run);    
   else 
     BeginWorker(run);
+
+
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  if ( analysisManager->IsActive() ) {
+    analysisManager->OpenFile();
+
+    analysisManager->CreateNtuple("Hits","Hits");
+    analysisManager->CreateNtupleIColumn("fEvent");
+    analysisManager->CreateNtupleDColumn("fX");
+    analysisManager->CreateNtupleDColumn("fY");
+    analysisManager->CreateNtupleDColumn("fZ");
+    analysisManager->CreateNtupleDColumn("fKineticEnergy");
+    analysisManager->CreateNtupleDColumn("fTime");
+    analysisManager->FinishNtuple(0);
+  }
+
+
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

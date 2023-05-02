@@ -31,8 +31,10 @@ DetectorConstruction::DetectorConstruction()
   //fBoxSize = 1.0*um;
   //fBoxSize = 500*um;
 
+  //fTargetHeight = 300.*nm;
   //fTargetHeight = 800.*nm;
   fTargetHeight = 400.*nm;
+  //fTargetHeight = 4000.*nm;
   fTargetSizeXY = 400.*nm;
   //fBoxSize = 500*nm;
   fBoxSize = fTargetHeight;//
@@ -223,6 +225,44 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
 		    false,		//no boolean operation
 		    0);			//copy number
 
+
+
+
+  // ///////////////////////////////////////////// //
+  //  Sensitive detectors at the end of the NCPs   //
+  // ///////////////////////////////////////////// //
+  G4Box *fSolidDetector  = new G4Box("solidDetector", 0.5*nanometer, 0.5*nanometer, 0.5*nanometer);
+  fLogicDetector = new G4LogicalVolume(fSolidDetector,fWorldMaterial,"logicDetector");
+
+  G4int num = 200;
+
+    for (G4int i = 0 ; i < num; i++)
+   {
+      for (G4int j = 0 ; j < num; j++)
+      {
+        //char c = j+i*num;
+        G4VPhysicalVolume *fPhysiDetector = new G4PVPlacement(0,
+                                            G4ThreeVector( (-num/2 + i)*nanometer,(-num/2 + j)*nanometer,
+                                            (fTargetHeight+10*nanometer)/2),
+                                            //fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
+                                            fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
+      }
+
+      //}
+  }
+
+  // ----
+  G4Tubs *fSolidDetectorTop  = new G4Tubs("solidDetectorTop", 0., (fTargetSizeXY-149*nm)/2, 0.001*nm,0., 360.*deg);
+  fLogicDetectorTop = new G4LogicalVolume(fSolidDetectorTop,fWorldMaterial,"logicDetectorTop");
+  G4VPhysicalVolume *fPhysiDetectorTop = new G4PVPlacement(0,
+                      G4ThreeVector(0,0,(-1*fTargetHeight/2)),
+                      fLogicDetectorTop, "physDetectorTop",fLogicWorld, false,true);
+
+
+
+
+
+
   // Visualization attributes
   G4VisAttributes* worldVisAtt= new G4VisAttributes(G4Colour(1.0,1.0,1.0)); //White
   worldVisAtt->SetVisibility(true);
@@ -279,13 +319,11 @@ void DetectorConstruction::ConstructSDandField()
 {
 
 
-  //SensitiveDetector * sensDetTop = new SensitiveDetector("SensitiveDetectorTop");
-  //fLogicDetectorTop->SetSensitiveDetector(sensDetTop);
+  SensitiveDetector * sensDetTop = new SensitiveDetector("SensitiveDetectorTop");
+  fLogicDetectorTop->SetSensitiveDetector(sensDetTop);
 
-
-
-  //SensitiveDetector * sensDet = new SensitiveDetector("SensitiveDetector");
-  //fLogicDetector->SetSensitiveDetector(sensDet);
+  SensitiveDetector * sensDet = new SensitiveDetector("SensitiveDetector");
+  fLogicDetector->SetSensitiveDetector(sensDet);
 
   //if ( fFieldMessenger.Get() == 0 ) {
   if ( !fEmFieldMessenger.Get()  ) {

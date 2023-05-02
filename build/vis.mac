@@ -22,7 +22,8 @@
 /vis/drawVolume
 #
 # Specify view angle:
-/vis/viewer/set/viewpointThetaPhi -90. 0.
+/vis/viewer/set/viewpointThetaPhi -80. 0.
+#/vis/scene/add/electricField
 #
 # Specify zoom value:
 #/vis/viewer/zoom 2.
@@ -66,8 +67,12 @@
 #
 # For file-based drivers, use this to create an empty detector view:
 #/vis/viewer/flush
+#/vis/scene/add/axes 0 0 0 200 nanometer
+/vis/viewer/set/viewpointVector 1 0 0
+/vis/viewer/set/viewpointThetaPhi -45
 /vis/scene/add/scale
 /vis/viewer/set/projection p
-
-#/vis/geometry/set/colour Target ! 1 0 0
-#/vis/geometry/set/colour World ! 0.5 0.5 0.9 1
+/vis/viewer/set/style surface
+/vis/geometry/set/visibility World ! false
+/vis/geometry/set/colour Target 0 1 1 0 0.7
+#/vis/geometry/set/colour World ! False
