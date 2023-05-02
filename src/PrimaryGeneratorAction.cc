@@ -58,8 +58,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* DC)
   //fParticleGun->SetParticleEnergy(260.*eV);
   fParticleGun->SetParticleEnergy(300.*eV);
 //  fParticleGun->SetParticleEnergy(1000.*eV);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1,0.,1.));
+//  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1,0.,1.));
 
   G4double z0 = -10*nm + -1*fDetector->GetTargetHalfHeight();
 

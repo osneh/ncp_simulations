@@ -34,8 +34,9 @@ DetectorConstruction::DetectorConstruction()
   //fTargetHeight = 300.*nm;
   //fTargetHeight = 800.*nm;
   fTargetHeight = 400.*nm;
+  //fTargetHeight = 400.*micrometer;
   //fTargetHeight = 4000.*nm;
-  fTargetSizeXY = 400.*nm;
+  fTargetSizeXY = 400.*nm;//icrometer;
   //fBoxSize = 500*nm;
   fBoxSize = fTargetHeight;//
   DefineMaterials();
@@ -76,8 +77,8 @@ void DetectorConstruction::DefineMaterials()
   // Silicon is defined from NIST material database
   G4NistManager * man = G4NistManager::Instance();
 //  fMaterial =  man->FindOrBuildMaterial("G4_Cu");
-  fMaterial =  man->FindOrBuildMaterial("G4_ALUMINUM_OXIDE");
-  //fMaterial =  man->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
+//  fMaterial =  man->FindOrBuildMaterial("G4_ALUMINUM_OXIDE");
+  fMaterial =  man->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
 
   G4String symbol;             //a=mass of a mole;
   G4double A, Z, fractionmass;      //z=mean number of protons;  
@@ -232,6 +233,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
   //  Sensitive detectors at the end of the NCPs   //
   // ///////////////////////////////////////////// //
   G4Box *fSolidDetector  = new G4Box("solidDetector", 0.5*nanometer, 0.5*nanometer, 0.5*nanometer);
+  //G4Box *fSolidDetector  = new G4Box("solidDetector", 0.5*micrometer, 0.5*micrometer, 0.5*micrometer);
   fLogicDetector = new G4LogicalVolume(fSolidDetector,fWorldMaterial,"logicDetector");
 
   G4int num = 200;
@@ -243,7 +245,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
         //char c = j+i*num;
         G4VPhysicalVolume *fPhysiDetector = new G4PVPlacement(0,
                                             G4ThreeVector( (-num/2 + i)*nanometer,(-num/2 + j)*nanometer,
+//                                            G4ThreeVector( (-num/2 + i)*micrometer,(-num/2 + j)*micrometer,
                                             (fTargetHeight+10*nanometer)/2),
+                                            //(fTargetHeight+10*nanometer)/2),
                                             //fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
                                             fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
       }

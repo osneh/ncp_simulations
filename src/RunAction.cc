@@ -35,7 +35,6 @@
 #include "G4AnalysisManager.hh"
 #include "G4Threading.hh"
 
-#include "Run.hh"
 #include "G4Run.hh"
 #include "G4UnitsTable.hh"
 #include "G4EmCalculator.hh"
@@ -52,7 +51,7 @@ RunAction::RunAction(DetectorConstruction* detConstruction)
 :G4UserRunAction()
 , fDetector(detConstruction)
 {
- fFileName = "ncp_simu";
+ fFileName = "ncp_sim";
  fpTrackingAction = 0;
  fInitialized = 0;
  fDebug = false;

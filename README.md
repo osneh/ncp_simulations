@@ -91,5 +91,5 @@ The current example ncp_sim.mac file looks like this:
 
 ```
 
-**This will run 1 event and print the progress every 1 event. It will be enough, because a single injected electron is expected to produce 10^6 output secondaries.** 
+**This will run 1 event and print the progress every 1 event. It will be good enough, because a single injected electron is expected to produce 10^6 output secondaries.** 
 
