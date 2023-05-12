@@ -83,8 +83,9 @@ F02ElectricFieldSetup::F02ElectricFieldSetup()
   fEMfield = new G4UniformElectricField(
                    //G4ThreeVector(0.0,1.0*kilovolt/cm,0.0));
                    //G4ThreeVector(0.,0.,-1*kilovolt/micrometer));
-                  // G4ThreeVector(0.,0.,-5*volt/nanometer));
-                   G4ThreeVector(0.,0.,0.));
+                  //G4ThreeVector(0.,0.,-400*volt/micrometer));
+                  G4ThreeVector(0.,0.,-44*volt/micrometer));
+                   //G4ThreeVector(0.,0.,0.));
   fEquation = new G4EqMagElectricField(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();

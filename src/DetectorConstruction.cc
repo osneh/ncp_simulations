@@ -33,10 +33,10 @@ DetectorConstruction::DetectorConstruction()
 
   //fTargetHeight = 300.*nm;
   //fTargetHeight = 800.*nm;
-  fTargetHeight = 400.*nm;
+  fTargetHeight = 50000.*nm;
   //fTargetHeight = 400.*micrometer;
   //fTargetHeight = 4000.*nm;
-  fTargetSizeXY = 400.*nm;//icrometer;
+  fTargetSizeXY = 1000.*nm;//icrometer;
   //fBoxSize = 500*nm;
   fBoxSize = fTargetHeight;//
   DefineMaterials();
@@ -208,7 +208,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
   
 
     ftargetSolid = new G4Tubs("Target",
-                              (fTargetSizeXY-200.*nm)/2,(fTargetSizeXY-100*nm)/2, fTargetHeight/2,
+                              //(fTargetSizeXY-200.*nm)/2,(fTargetSizeXY-10*nm)/2, fTargetHeight/2,
+                              (fTargetSizeXY-600.*nm)/2,(fTargetSizeXY-200*nm)/2, fTargetHeight/2,
                               0. ,
                               360.*deg);
 
