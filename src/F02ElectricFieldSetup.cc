@@ -84,8 +84,8 @@ F02ElectricFieldSetup::F02ElectricFieldSetup()
                    //G4ThreeVector(0.0,1.0*kilovolt/cm,0.0));
                    //G4ThreeVector(0.,0.,-1*kilovolt/micrometer));
                   //G4ThreeVector(0.,0.,-400*volt/micrometer));
-                  G4ThreeVector(0.,0.,-44*volt/micrometer));
-                   //G4ThreeVector(0.,0.,0.));
+                  G4ThreeVector(0.,0.,-5.5*volt/nanometer));
+             //      G4ThreeVector(0.,0.,0.));
   fEquation = new G4EqMagElectricField(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
@@ -145,7 +145,7 @@ void F02ElectricFieldSetup::UpdateIntegrator()
   assert(fEquation!=nullptr);
 
   G4cout<< " F02ElectricFieldSetup: The minimal step is equal to "
-        << fMinStep/mm << " mm" << G4endl;
+        << fMinStep/nm << " nm" << G4endl;
 
   if (fChordFinder) {
      delete fChordFinder;

@@ -55,6 +55,54 @@ RunAction::RunAction(DetectorConstruction* detConstruction)
  fpTrackingAction = 0;
  fInitialized = 0;
  fDebug = false;
+
+
+
+
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+
+	analysisManager->OpenFile(fFileName+".root");
+
+  //if ( analysisManager->IsActive() ) {
+    //analysisManager->OpenFile();
+    //analysisManager->OpenFile("Hits.root");
+
+
+        analysisManager->CreateNtuple("microelectronics", "physics");
+        analysisManager->CreateNtupleDColumn("flagParticle");
+        analysisManager->CreateNtupleDColumn("flagProcess");
+        analysisManager->CreateNtupleDColumn("x");
+        analysisManager->CreateNtupleDColumn("y");
+        analysisManager->CreateNtupleDColumn("z");
+        analysisManager->CreateNtupleDColumn("totalEnergyDeposit");
+        analysisManager->CreateNtupleDColumn("stepLength");
+        analysisManager->CreateNtupleDColumn("kineticEnergyDifference");
+        analysisManager->CreateNtupleDColumn("kineticEnergy");
+        analysisManager->FinishNtuple(0);
+
+
+
+
+    analysisManager->CreateNtuple("Hits","Hits");
+    analysisManager->CreateNtupleIColumn("fEvent");
+    analysisManager->CreateNtupleDColumn("fX");
+    analysisManager->CreateNtupleDColumn("fY");
+    analysisManager->CreateNtupleDColumn("fZ");
+    analysisManager->CreateNtupleDColumn("fKineticEnergy");
+    analysisManager->CreateNtupleDColumn("fTime");
+    //analysisManager->FinishNtuple(0);
+    analysisManager->FinishNtuple(1);
+
+
+
+
+
+
+
+
+
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -78,10 +126,11 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     BeginWorker(run);
 
 
-
+/*
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   //if ( analysisManager->IsActive() ) {
-    analysisManager->OpenFile();
+    //analysisManager->OpenFile();
+    //analysisManager->OpenFile("Hits.root");
 
     analysisManager->CreateNtuple("Hits","Hits");
     analysisManager->CreateNtupleIColumn("fEvent");
@@ -90,9 +139,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     analysisManager->CreateNtupleDColumn("fZ");
     analysisManager->CreateNtupleDColumn("fKineticEnergy");
     analysisManager->CreateNtupleDColumn("fTime");
-    analysisManager->FinishNtuple(0);
+    //analysisManager->FinishNtuple(0);
+    analysisManager->FinishNtuple(1);
   //}
-
+*/
 
 
 
@@ -250,7 +300,7 @@ void RunAction::CreateHistogram()
 	// Create analysis manager
 	// The choice of analysis technology is done via selection of a namespace
 	// in Analysis.hh
-
+/*
 	G4cout << "##### Create analysis manager " << "  " << this << G4endl;
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetDefaultFileType("root");
@@ -279,8 +329,10 @@ void RunAction::CreateHistogram()
 	analysisManager->CreateNtupleDColumn("stepLength");
 	analysisManager->CreateNtupleDColumn("kineticEnergyDifference");
 	analysisManager->CreateNtupleDColumn("kineticEnergy");
-	analysisManager->FinishNtuple();
-}
+	analysisManager->FinishNtuple(0);
+//	analysisManager->FinishNtuple(0);
+*/
+	}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

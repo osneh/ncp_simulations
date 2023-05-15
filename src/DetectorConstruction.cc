@@ -33,9 +33,10 @@ DetectorConstruction::DetectorConstruction()
 
   //fTargetHeight = 300.*nm;
   //fTargetHeight = 800.*nm;
-  fTargetHeight = 50000.*nm;
+  //fTargetHeight = 50000.*nm;
+  //fTargetHeight = 800.*nm;
   //fTargetHeight = 400.*micrometer;
-  //fTargetHeight = 4000.*nm;
+  fTargetHeight = 400.*nm;
   fTargetSizeXY = 1000.*nm;//icrometer;
   //fBoxSize = 500*nm;
   fBoxSize = fTargetHeight;//
@@ -208,8 +209,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
   
 
     ftargetSolid = new G4Tubs("Target",
-                              //(fTargetSizeXY-200.*nm)/2,(fTargetSizeXY-10*nm)/2, fTargetHeight/2,
-                              (fTargetSizeXY-600.*nm)/2,(fTargetSizeXY-200*nm)/2, fTargetHeight/2,
+                              (fTargetSizeXY-800.*nm)/2,(fTargetSizeXY-10*nm)/2, fTargetHeight/2,
+                              //(fTargetSizeXY-600.*nm)/2,(fTargetSizeXY-200*nm)/2, fTargetHeight/2,
                               0. ,
                               360.*deg);
 
@@ -238,6 +239,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
   fLogicDetector = new G4LogicalVolume(fSolidDetector,fWorldMaterial,"logicDetector");
 
   G4int num = 200;
+  //G4int num = 100;
 
     for (G4int i = 0 ; i < num; i++)
    {
@@ -247,7 +249,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
         G4VPhysicalVolume *fPhysiDetector = new G4PVPlacement(0,
                                             G4ThreeVector( (-num/2 + i)*nanometer,(-num/2 + j)*nanometer,
 //                                            G4ThreeVector( (-num/2 + i)*micrometer,(-num/2 + j)*micrometer,
-                                            (fTargetHeight+10*nanometer)/2),
+                                            (fTargetHeight)/2 + 1*nanometer),
                                             //(fTargetHeight+10*nanometer)/2),
                                             //fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
                                             fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);

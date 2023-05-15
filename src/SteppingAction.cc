@@ -75,9 +75,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
 //  if (step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()!="Transportation")
 //  {  
-//    x=step->GetPreStepPoint()->GetPosition().x()/nanometer;
-//    y=step->GetPreStepPoint()->GetPosition().y()/nanometer;
-//    z=step->GetPreStepPoint()->GetPosition().z()/nanometer;
+    x=step->GetPreStepPoint()->GetPosition().x()/nanometer;
+        y=step->GetPreStepPoint()->GetPosition().y()/nanometer;
+    z=step->GetPreStepPoint()->GetPosition().z()/nanometer;
 //    xp=step->GetPostStepPoint()->GetPosition().x()/nanometer;
 //    yp=step->GetPostStepPoint()->GetPosition().y()/nanometer;
 //    zp=step->GetPostStepPoint()->GetPosition().z()/nanometer;
@@ -97,16 +97,27 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 //    analysisManager->AddNtupleRow();      
 // }
 
-if ( ( step->GetPostStepPoint()->GetMomentumDirection().z() < 0. )  && 
+if ( ( step->GetPostStepPoint()->GetMomentumDirection().z() > 0. )  && 
     ( step->GetTrack()->GetKineticEnergy() > 0.0   ) && 
-      (step->GetTrack()->GetVolume()->GetName()=="World" )) {
+    ( step->GetTrack()->GetPosition().z()/nanometer > 200   ) && 
+      (step->GetTrack()->GetVolume()->GetName()=="World" ) ) {
 
     // get analysis manager
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
-    analysisManager->FillNtupleDColumn(1, flagProcess);
-    analysisManager->FillNtupleDColumn(8, step->GetPostStepPoint()->GetKineticEnergy()/eV);
-    analysisManager->AddNtupleRow(); 
+    analysisManager->FillNtupleDColumn(0,0, flagParticle);
+    analysisManager->FillNtupleDColumn(0,1, flagProcess);
+    analysisManager->FillNtupleDColumn(0,2, x);
+    analysisManager->FillNtupleDColumn(0,3, y);
+    analysisManager->FillNtupleDColumn(0,4, z);
+    analysisManager->FillNtupleDColumn(0,5, step->GetTotalEnergyDeposit()/eV);
+//    analysisManager->FillNtupleDColumn(6, std::sqrt((x-xp)*(x-xp)+(y-yp)*(y-yp)+(z-zp)*(z-zp))/nm);
+    analysisManager->FillNtupleDColumn(0,6, -1);//std::sqrt((x-xp)*(x-xp)+(y-yp)*(y-yp)+(z-zp)*(z-zp))/nm);
+    //analysisManager->FillNtupleDColumn(0,7, (step->GetPreStepPoint()->GetKineticEnergy() - step->GetPostStepPoint()->GetKineticEnergy())/eV );
+    analysisManager->FillNtupleDColumn(0,7, -1);
+    //analysisManager->FillNtupleDColumn(0,8, step->GetPostStepPoint()->GetKineticEnergy()/eV);
+//    analysisManager->FillNtupleDColumn(0,8, -1);
+    analysisManager->AddNtupleRow(0); 
         
 }
 

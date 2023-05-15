@@ -33,6 +33,7 @@
 #include "G4Electron.hh"
 #include "G4Gamma.hh"
 #include "DetectorConstruction.hh"
+#include "G4SystemOfUnits.hh"
 
 using namespace std;
 
@@ -140,7 +141,9 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
 
 
 
-  if ( (aTrack->GetMomentumDirection().z() < 0. )  && (aTrack->GetVolume()->GetName() == "World") && (aTrack->GetPosition().z() < 0. ) ){
+  if ( (aTrack->GetMomentumDirection().z() > 0. )  && 
+		  (aTrack->GetVolume()->GetName() == "World") && 
+		  (aTrack->GetPosition().z() > 200*nm ) ){
 
             fNParticleOutTarget[particleDefinition]++;
   }
