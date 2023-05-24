@@ -81,14 +81,16 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhits)
     
 	G4Track* aTrack = aStep->GetTrack();
 	
-	//G4int trackID = aStep->GetTrack()->GetTrackID();
+	G4int trackID = aStep->GetTrack()->GetTrackID();
 	//G4int ParentID = aStep->GetTrack()->GetParentID();
 	
     G4StepPoint *preStepPoint = aStep->GetPreStepPoint();
     G4StepPoint *postStepPoint = aStep->GetPostStepPoint();
 
 
-    G4ThreeVector posElectron = preStepPoint->GetPosition();
+    //G4ThreeVector posElectron = preStepPoint->GetPosition();
+	G4ThreeVector posElectron = postStepPoint->GetPosition();
+	G4double Post_kinetic_energy = aStep->GetPostStepPoint()->GetKineticEnergy(); 
 
     //G4cout << " -->> Electron Position : " << posElectron << G4endl;
 
@@ -101,28 +103,31 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhits)
 	G4ThreeVector posDetector = physVol->GetTranslation();
 
 	//G4cout << " -->> Detector position:" << posDetector << G4endl;
-	G4double hitTime = preStepPoint->GetGlobalTime(); 
+	G4double hitTime = postStepPoint->GetGlobalTime(); 
 	//G4cout << " -->> Time:" << hitTime << G4endl;
 
-	G4double energy = aTrack->GetKineticEnergy();
+	//G4double energy = aTrack->GetKineticEnergy();
 
 
 
-	G4int evt = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+	//G4int evt = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     //G4cout << " -->> Detector position:" << posDetector << G4endl;
-//	G4cout<< " -->>TEST pos 0,1,2  : " << posDetector[0]<<","<<posDetector[1]<<","<<posDetector[2] << G4endl;
+	//G4cout<< " -->>TEST pos 0,1,2  : " << posElectron[0]/nm<<","<<posElectron[1]/nm<<","<<posElectron[2]/nm  << " , Energy:" << Post_kinetic_energy/eV << G4endl;
 //	G4cout << " -->> Energy:" << energy << G4endl;
 //	G4cout << " -->> EVENT:" << evt  << G4endl;
 	// //////////////////////////////// // 
 	//    		Filling Ntuple 			//
 	// //////////////////////////////// // 
-	analysisManager->FillNtupleIColumn(1,0,evt);
-	analysisManager->FillNtupleDColumn(1,1,posDetector[0]/nm);
-	analysisManager->FillNtupleDColumn(1,2,posDetector[1]/nm);
-	analysisManager->FillNtupleDColumn(1,3,posDetector[2]/nm);
-	analysisManager->FillNtupleDColumn(1,4,energy/eV );
+	analysisManager->FillNtupleIColumn(1,0,trackID);
+	analysisManager->FillNtupleDColumn(1,1,posElectron[0]/nm);
+	analysisManager->FillNtupleDColumn(1,2,posElectron[1]/nm);
+	analysisManager->FillNtupleDColumn(1,3,posElectron[2]/nm);
+	//analysisManager->FillNtupleDColumn(1,1,posDetector[0]/nm);
+	//analysisManager->FillNtupleDColumn(1,2,posDetector[1]/nm);
+	//analysisManager->FillNtupleDColumn(1,3,posDetector[2]/nm);
+	analysisManager->FillNtupleDColumn(1,4,Post_kinetic_energy/eV );
 	analysisManager->FillNtupleDColumn(1,5,hitTime);
 	analysisManager->AddNtupleRow(1);
 	/*

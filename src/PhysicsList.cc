@@ -66,7 +66,7 @@
 PhysicsList::PhysicsList():  G4VUserPhysicsList()
 {
   defaultCutValue = 1*micrometer;
-//  defaultCutValue = 1*nanometer;
+  //defaultCutValue = 1*nanometer;
   cutForGamma     = defaultCutValue;
   cutForElectron  = defaultCutValue;
   cutForPositron  = defaultCutValue;

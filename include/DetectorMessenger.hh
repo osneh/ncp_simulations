@@ -60,7 +60,10 @@ class DetectorMessenger: public G4UImessenger
     G4UIdirectory*             fmicroelectronicsDir;
     G4UIdirectory*             fDetDir;
     G4UIcmdWithAString*        fMaterCmd;
-    G4UIcmdWithADoubleAndUnit* fSizeCmd;
+    G4UIcmdWithADoubleAndUnit* fSizeDCmd;
+    G4UIcmdWithADoubleAndUnit* fSizeLCmd;
+    G4UIcmdWithADoubleAndUnit* fDistancePlateCmd;
+    G4UIcmdWithoutParameter*   fUpdateCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

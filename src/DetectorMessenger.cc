@@ -45,28 +45,56 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
  fmicroelectronicsDir(0),
  fDetDir(0),
  fMaterCmd(0),
- fSizeCmd(0)
+ fSizeDCmd(0),
+ fSizeLCmd(0),
+ fDistancePlateCmd(0),
+ fUpdateCmd(0)
 { 
   
-  fmicroelectronicsDir = new G4UIdirectory("/microelectronics/");
+  fmicroelectronicsDir = new G4UIdirectory("/ncp/");
   fmicroelectronicsDir->SetGuidance("commands specific to this example");
   
-  fDetDir = new G4UIdirectory("/microelectronics/det/");
+  fDetDir = new G4UIdirectory("/ncp/det/");
   fDetDir->SetGuidance("detector construction commands");
         
-  fMaterCmd = new G4UIcmdWithAString("/microelectronics/det/setMat",this);
+  fMaterCmd = new G4UIcmdWithAString("/ncp/det/setMat",this);
   fMaterCmd->SetGuidance("Select material of the box.");
   fMaterCmd->SetParameterName("choice",false);
   fMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fMaterCmd->SetToBeBroadcasted(false);
   
-  fSizeCmd = new G4UIcmdWithADoubleAndUnit("/microelectronics/det/setSize",this);
-  fSizeCmd->SetGuidance("Set size of the box");
-  fSizeCmd->SetParameterName("Size",false);
-  fSizeCmd->SetRange("Size>0.");
-  fSizeCmd->SetUnitCategory("Length");
-  fSizeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  fSizeCmd->SetToBeBroadcasted(false);
+  fSizeDCmd = new G4UIcmdWithADoubleAndUnit("/ncp/det/setDiameter",this);
+  fSizeDCmd->SetGuidance("Set Diameter of the tube");
+  fSizeDCmd->SetParameterName("Diameter",false);
+  fSizeDCmd->SetRange("Diameter>0.");
+  fSizeDCmd->SetUnitCategory("Length");
+  fSizeDCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fSizeDCmd->SetToBeBroadcasted(false);
+
+  fSizeLCmd = new G4UIcmdWithADoubleAndUnit("/ncp/det/setLenght",this);
+  fSizeLCmd->SetGuidance("Set Lenght of the tube");
+  fSizeLCmd->SetParameterName("Lenght",false);
+  fSizeLCmd->SetRange("Lenght>0.");
+  fSizeLCmd->SetUnitCategory("Length");
+  fSizeLCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fSizeLCmd->SetToBeBroadcasted(false);
+
+
+  fDistancePlateCmd = new G4UIcmdWithADoubleAndUnit("/ncp/det/setDistancePlate",this);
+  fDistancePlateCmd->SetGuidance("Set Distance of the end tube and SD plate");
+  fDistancePlateCmd->SetParameterName("DistancePlate",false);
+  fDistancePlateCmd->SetRange("DistancePlate>0.");
+  fDistancePlateCmd->SetUnitCategory("Length");
+  fDistancePlateCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fDistancePlateCmd->SetToBeBroadcasted(false);
+  
+  
+  fUpdateCmd = new G4UIcmdWithoutParameter("/ncp/det/update", this);
+  fUpdateCmd->SetGuidance("Update Nano-Channel-Plate geometry.");
+  fUpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
+  fUpdateCmd->SetGuidance("if you changed geometrical value(s).");
+  fUpdateCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -74,9 +102,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
 DetectorMessenger::~DetectorMessenger()
 {
   delete fMaterCmd;
-  delete fSizeCmd; 
+  delete fSizeDCmd; 
+  delete fSizeLCmd;
+  delete fDistancePlateCmd;
   delete fDetDir;
   delete fmicroelectronicsDir;
+  delete fUpdateCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -86,8 +117,17 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if( command == fMaterCmd )
    { fDetector->SetMaterial(newValue);}
    
-  if( command == fSizeCmd )
-   { fDetector->SetSize(fSizeCmd->GetNewDoubleValue(newValue));}
+  if( command == fSizeDCmd )
+   { fDetector->SetDiameter(fSizeDCmd->GetNewDoubleValue(newValue));}
+
+  if ( command == fSizeLCmd )
+    {fDetector->SetLength(fSizeLCmd->GetNewDoubleValue(newValue)); }
+
+  if ( command == fDistancePlateCmd )
+    {fDetector->SetDistancePlate(fDistancePlateCmd->GetNewDoubleValue(newValue)); }
+
+  if ( command == fUpdateCmd )
+  { fDetector->UpdateGeometry();}
    
 }
 

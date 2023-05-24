@@ -67,8 +67,8 @@ RunAction::RunAction(DetectorConstruction* detConstruction)
     //analysisManager->OpenFile();
     //analysisManager->OpenFile("Hits.root");
 
-
-        analysisManager->CreateNtuple("microelectronics", "physics");
+        G4int n = analysisManager->CreateNtuple("microelectronics","physics");
+        //analysisManager->CreateNtuple("microelectronics", "physics");
         analysisManager->CreateNtupleDColumn("flagParticle");
         analysisManager->CreateNtupleDColumn("flagProcess");
         analysisManager->CreateNtupleDColumn("x");
@@ -84,7 +84,7 @@ RunAction::RunAction(DetectorConstruction* detConstruction)
 
 
     analysisManager->CreateNtuple("Hits","Hits");
-    analysisManager->CreateNtupleIColumn("fEvent");
+    analysisManager->CreateNtupleIColumn("fTrackID");
     analysisManager->CreateNtupleDColumn("fX");
     analysisManager->CreateNtupleDColumn("fY");
     analysisManager->CreateNtupleDColumn("fZ");

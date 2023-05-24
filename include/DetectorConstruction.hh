@@ -37,15 +37,22 @@ public:
 
   G4VPhysicalVolume* Construct();
 
-  void SetSize     (G4double);              
+  void SetSize     (G4double); 
+  void SetDiameter (G4double); 
+  void SetLength   (G4double); 
+  void SetDistancePlate (G4double);        
   void SetMaterial (const G4String&);
 
   inline const G4VPhysicalVolume* GetWorld() const {return fPhysiWorld;};
   inline G4double GetSize() const                  {return fBoxSize;};      
   inline const G4Material* GetMaterial() const     {return fMaterial;};
 
-  G4double GetWorldSizeZ() const                {return fWorldSizeZ;}; // Added by Henso
-  G4double GetTargetHalfHeight() const          {return fTargetHeight*0.5;}; // Added by Henso
+  G4double GetWorldSizeZ() const            {return fWorldSizeZ;};                      // Added by Henso
+  G4double GetTargetLength() const          {return fTargetL;};                         // Added by Henso
+  G4double GetTargetHalfHeight() const      {return fTargetL*0.5;};                     // Added by Henso
+  G4double GetTargetDiameter() const        {return fTargetD;};                         // Added by Henso
+  G4double GetDistanceToPlate() const       {return fDistancePlate;}                    // Added by Henso
+  G4double GetTargetThickness() const       {return (fTargetExternalD-fTargetD)*0.5;};  // Added by Henso
 
   void   PrintParameters();
   void   DefineMaterials(); 
@@ -54,6 +61,8 @@ public:
   G4Region* GetTargetRegion()  {return fRegion;}
   //G4Region* GetWorldRegion()  {return fWorld;}
 
+
+  void UpdateGeometry();                                              // Added by Henso
   void ConstructSDandField() override;
 
 
@@ -69,8 +78,13 @@ private:
 
   G4Material*        fWorldMaterial;
   G4LogicalVolume*   flogicTarget;
-  //G4Box*             ftargetSolid;
-  G4Tubs*             ftargetSolid;
+  G4Tubs*            ftargetSolid;
+
+  G4Box*             fSolidDetector;   // sensitive detector 
+  G4VPhysicalVolume* fPhysiDetector; // sensitive detector TOP
+
+  G4Tubs*            fSolidDetectorTop; // sensitive detector TOP
+  G4VPhysicalVolume* fPhysiDetectorTop; // sensitive detector TOP
  
   G4double           fXposTarget;
   G4double           fXstartTarget, fXendTarget;
@@ -80,9 +94,11 @@ private:
   G4Region*          fRegion;
   //G4Region*          fWorld;
 
-  G4double           fTargetHeight;
-  G4double           fTargetSizeXY;
+  G4double           fTargetL;
+  G4double           fTargetD;
+  G4double           fTargetExternalD;
 
+  G4double           fDistancePlate; 
 
   G4UserLimits* fStepLimit;
 

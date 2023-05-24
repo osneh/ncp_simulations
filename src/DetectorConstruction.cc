@@ -22,27 +22,27 @@
 #include "G4SDManager.hh"
 #include "F02ElectricFieldSetup.hh"
 
+#include "G4GeometryManager.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-DetectorConstruction::DetectorConstruction()
-:G4VUserDetectorConstruction(), fPhysiWorld(nullptr), fLogicWorld(nullptr),    fSolidWorld(nullptr),  fWorldMaterial(nullptr),  flogicTarget(nullptr),  ftargetSolid(nullptr),  fMaterial(nullptr),   fRegion(nullptr)
+DetectorConstruction::DetectorConstruction():G4VUserDetectorConstruction(), 
+fPhysiWorld(nullptr), fLogicWorld(nullptr), fSolidWorld(nullptr),  
+fWorldMaterial(nullptr),  flogicTarget(nullptr),  ftargetSolid(nullptr),  
+fSolidDetectorTop(nullptr),fLogicDetectorTop(nullptr), fPhysiDetectorTop(nullptr),
+fSolidDetector(nullptr), fLogicDetector(nullptr),fPhysiDetector(nullptr),
+fMaterial(nullptr), fRegion(nullptr)
 {
-  //fBoxSize = 1.0*um;
-  //fBoxSize = 500*um;
+  fTargetL = 16000.*nm;
+  fTargetExternalD = 1200*nm;
+  fTargetD = 400.*nm;;
+  if ( fTargetL > fTargetExternalD ) fBoxSize = 1.2*fTargetL;
+  else fBoxSize = 1.2*fTargetExternalD;
+  fDistancePlate = 10.*nm;
+  DefineMaterials(); 
+  SetMaterial("G4_Galactic");
 
-  //fTargetHeight = 300.*nm;
-  //fTargetHeight = 800.*nm;
-  //fTargetHeight = 50000.*nm;
-  //fTargetHeight = 800.*nm;
-  //fTargetHeight = 400.*micrometer;
-  fTargetHeight = 400.*nm;
-  fTargetSizeXY = 1000.*nm;//icrometer;
-  //fBoxSize = 500*nm;
-  fBoxSize = fTargetHeight;//
-  DefineMaterials();
-  //SetMaterial("G4_Cu");  
-  SetMaterial("G4_Galactic");  
   fDetectorMessenger = new DetectorMessenger(this);
 }  
 
@@ -59,12 +59,23 @@ DetectorConstruction::~DetectorConstruction()
   delete fMaterial; 
   delete fRegion;
   delete fDetectorMessenger;
+
+  delete fSolidDetectorTop;
+  delete fLogicDetectorTop;
+  //delete fPhysiDetectorTop;
+
+  delete fSolidDetector;
+  delete fLogicDetector;
+  //delete fPhysiDetector;
+
+  //delete fTargetL;
+  //delete fTargetD;
+  //delete fTargetExternalD;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
-
 {
   DefineMaterials();
   return ConstructDetector();
@@ -143,44 +154,36 @@ void DetectorConstruction::SetMaterial(const G4String& materialChoice)
   G4RunManager::GetRunManager()->PhysicsHasBeenModified();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// -----------------------
+void DetectorConstruction::SetDiameter(G4double value)
+{
+  fTargetD = value;
+}
 
+// -----------------------
+void DetectorConstruction::SetLength(G4double value)
+{
+  fTargetL = value;
+}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+// -----------------------
+void DetectorConstruction::SetDistancePlate(G4double value)
+{
+  fDistancePlate = value;
+}
+
+// -----------------------
+
 G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
 {
-
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-  // WORLD VOLUME
-  //G4double TargetSizeX =  400*um; 
-  //G4double TargetSizeX =  100*um; 
-  //G4double TargetSizeX =  250*nm; 
-//  G4double TargetSizeX =  30*nm; 
-  //G4double TargetSizeY =  TargetSizeX; 
-  //G4double TargetSizeZ =  0.15*TargetSizeX; 
-  //G4double TargetSizeY =  TargetSizeX;
-  //G4double TargetSizeZ =  30*nm;
-//  fBoxSize = TargetSizeX;
-
-  //fXposTarget = 0.5*TargetSizeZ;
   fXposTarget = 0.;
 
-  fXstartTarget = fXposTarget-0.5*fTargetHeight;
-  fXendTarget   = fXposTarget+0.5*fTargetHeight;
-
-
-
-  //fWorldSizeX  = TargetSizeX*1.1; 
-  //fWorldSizeY  = TargetSizeY*1.1; 
-  //fWorldSizeZ  = TargetSizeZ*2; 
+  fXstartTarget = fXposTarget-0.5*fTargetL;
+  fXendTarget   = fXposTarget+0.5*fTargetL;
   
-  fWorldSizeX  = 1.1*fTargetSizeXY; 
-  fWorldSizeY  = 1.1*fTargetSizeXY; 
-  fWorldSizeZ  = 1.1*fTargetHeight; 
-  //fWorldSizeY  = 500*um; 
-  //fWorldSizeZ  = 500*um; 
+  fWorldSizeX  = 1.1*fTargetExternalD; 
+  fWorldSizeY  = 1.1*fTargetExternalD; 
+  fWorldSizeZ  = 1.1*fTargetL; 
 
   fSolidWorld = new G4Box("World",				     //its name
 			   fWorldSizeX/2,fWorldSizeY/2,fWorldSizeZ/2);  //its size
@@ -209,8 +212,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
   
 
     ftargetSolid = new G4Tubs("Target",
-                              (fTargetSizeXY-800.*nm)/2,(fTargetSizeXY-10*nm)/2, fTargetHeight/2,
-                              //(fTargetSizeXY-600.*nm)/2,(fTargetSizeXY-200*nm)/2, fTargetHeight/2,
+                              //(fTargetExternalD-fTargetD)/2,(fTargetExternalD)/2, fTargetL/2,
+                              (fTargetD)/2,(fTargetExternalD)/2, fTargetL/2,
+                              //(fTargetD-600.*nm)/2,(fTargetD-200*nm)/2, fTargetL/2,
                               0. ,
                               360.*deg);
 
@@ -234,11 +238,20 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
   // ///////////////////////////////////////////// //
   //  Sensitive detectors at the end of the NCPs   //
   // ///////////////////////////////////////////// //
-  G4Box *fSolidDetector  = new G4Box("solidDetector", 0.5*nanometer, 0.5*nanometer, 0.5*nanometer);
+  
+  
+   //fSolidDetector  = new G4Box("solidDetector", 0.5*nanometer, 0.5*nanometer, 0.5*nanometer);
+   fSolidDetector  = new G4Box("solidDetector", 0.98*(fWorldSizeX/2), 0.98*(fWorldSizeY/2), 1*nanometer);
   //G4Box *fSolidDetector  = new G4Box("solidDetector", 0.5*micrometer, 0.5*micrometer, 0.5*micrometer);
+  
   fLogicDetector = new G4LogicalVolume(fSolidDetector,fWorldMaterial,"logicDetector");
 
-  G4int num = 200;
+  fPhysiDetector = new G4PVPlacement(0,
+                    G4ThreeVector(0,0,(0.5*fTargetL+fDistancePlate)),
+                    fLogicDetector, "physDetector",fLogicWorld, false,true);
+
+  /*
+  G4int num = 10;
   //G4int num = 100;
 
     for (G4int i = 0 ; i < num; i++)
@@ -247,28 +260,22 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
       {
         //char c = j+i*num;
         G4VPhysicalVolume *fPhysiDetector = new G4PVPlacement(0,
-                                            G4ThreeVector( (-num/2 + i)*nanometer,(-num/2 + j)*nanometer,
-//                                            G4ThreeVector( (-num/2 + i)*micrometer,(-num/2 + j)*micrometer,
-                                            (fTargetHeight)/2 + 1*nanometer),
-                                            //(fTargetHeight+10*nanometer)/2),
-                                            //fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
+                                            G4ThreeVector( (-num/2 + i)*nanometer,
+                                                            (-num/2 + j)*nanometer,
+                                                            (fTargetL)/2 + 20*nanometer),
                                             fLogicDetector, "physDetector",fLogicWorld, false, j+i*num, true);
       }
-
-      //}
   }
-
+  */
   // ----
-  G4Tubs *fSolidDetectorTop  = new G4Tubs("solidDetectorTop", 0., (fTargetSizeXY-149*nm)/2, 0.001*nm,0., 360.*deg);
+  //G4Tubs *fSolidDetectorTop  = new G4Tubs("solidDetectorTop", 0., (fTargetExternalD - fTargetD -1*nm)/2, 0.001*nm,0., 360.*deg);
+  //G4Tubs *fSolidDetectorTop  = new G4Tubs("solidDetectorTop", 0., (fTargetD -1*nm)/2, 0.001*nm,0., 360.*deg);
+  fSolidDetectorTop  = new G4Tubs("solidDetectorTop", 0., (fTargetD -1*nm)/2, 0.001*nm,0., 360.*deg);
   fLogicDetectorTop = new G4LogicalVolume(fSolidDetectorTop,fWorldMaterial,"logicDetectorTop");
-  G4VPhysicalVolume *fPhysiDetectorTop = new G4PVPlacement(0,
-                      G4ThreeVector(0,0,(-1*fTargetHeight/2)),
+  //G4VPhysicalVolume *fPhysiDetectorTop = new G4PVPlacement(0,
+  fPhysiDetectorTop = new G4PVPlacement(0,
+                      G4ThreeVector(0,0,(-0.5*fTargetL)),
                       fLogicDetectorTop, "physDetectorTop",fLogicWorld, false,true);
-
-
-
-
-
 
   // Visualization attributes
   G4VisAttributes* worldVisAtt= new G4VisAttributes(G4Colour(1.0,1.0,1.0)); //White
@@ -308,11 +315,11 @@ void DetectorConstruction::SetSize(G4double value)
   if(ftargetSolid) {
     //ftargetSolid->SetXHalfLength(fBoxSize/2);
     //ftargetSolid->SetYHalfLength(fBoxSize/2);
-    ftargetSolid->SetZHalfLength(fTargetHeight/2);
+    ftargetSolid->SetZHalfLength(fTargetL/2);
   }
-  fWorldSizeX = value*0.1;
-  fWorldSizeY = value*0.1;
-  fWorldSizeZ = value*0.1;
+  fWorldSizeX = value*1.2;
+  fWorldSizeY = value*1.2;
+  fWorldSizeZ = value*1.2;
   
   if(fSolidWorld) {
     fSolidWorld->SetXHalfLength(fWorldSizeX/2);
@@ -321,7 +328,60 @@ void DetectorConstruction::SetSize(G4double value)
   }
   
 }
+// ---- 
 
+void DetectorConstruction::UpdateGeometry()
+{
+
+  G4cout << "UpdateGeometry Begin" << G4endl;
+  G4GeometryManager::GetInstance()->OpenGeometry();
+
+  if (ftargetSolid){
+      ftargetSolid->SetInnerRadius(fTargetD/2.);
+      ftargetSolid->SetOuterRadius(fTargetExternalD/2.);
+      ftargetSolid->SetZHalfLength(fTargetL/2.);
+
+  }
+  fWorldSizeX  = 1.1*fTargetExternalD; 
+  fWorldSizeY  = 1.1*fTargetExternalD; 
+  fWorldSizeZ  = 1.1*fTargetL; 
+
+  if (fSolidWorld){
+      fSolidWorld->SetXHalfLength(fWorldSizeX/2);
+      fSolidWorld->SetYHalfLength(fWorldSizeY/2);
+      fSolidWorld->SetZHalfLength(fWorldSizeZ/2+fDistancePlate);
+  }
+
+  if (fSolidDetectorTop){
+      fSolidDetectorTop->SetInnerRadius(0.);
+      fSolidDetectorTop->SetOuterRadius( (fTargetD-1*nm)/2. );
+      //fSolidDetectorTop->SetTranslation(G4ThreeVector(0,0,-0.5*fTargetL));
+  }
+
+  if (fPhysiDetectorTop){
+    fPhysiDetectorTop->SetTranslation(G4ThreeVector(0,0,-0.5*fTargetL));
+  }
+
+  if (fPhysiDetector){
+    fPhysiDetector->SetTranslation(G4ThreeVector(0,0,0.5*fTargetL+fDistancePlate));
+  }
+
+  G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+  G4RunManager::GetRunManager()->GeometryHasBeenModified();
+
+  G4cout << " New NCP diameter : " << GetTargetDiameter()/nm ;
+  G4cout << " , New NCP Lenght = " << GetTargetLength()/nm ;
+  G4cout << ", New NCP Thickness = " << GetTargetThickness()/nm << G4endl;
+  G4cout << " , New NCP Lenght = " << GetTargetLength()/nm ;
+  G4cout << ", New Distance End of Tube SD Plate  = " << GetDistanceToPlate()/nm << G4endl;
+  G4cout << " ---------------- UpdateGeometry End --------------------- " << G4endl;
+       // system("pause");^M
+
+
+}
+
+
+// ----
 void DetectorConstruction::ConstructSDandField()
 {
 
@@ -351,4 +411,3 @@ void DetectorConstruction::ConstructSDandField()
 
   }
 }
-

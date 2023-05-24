@@ -40,6 +40,10 @@
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithoutParameter.hh"
 
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
@@ -73,6 +77,7 @@ F02FieldMessenger::F02FieldMessenger(F02ElectricFieldSetup* fieldSetup)
   fElFieldZCmd->SetGuidance("Value of Electric field has to be given in volt/m");
   fElFieldZCmd->SetParameterName("Ez",false,false);
   fElFieldZCmd->SetDefaultUnit("megavolt/m");
+ // fElFieldZCmd->SetDefaultUnit("volt/nanometer");
   fElFieldZCmd->AvailableForStates(G4State_Idle);
  
   fElFieldCmd = new G4UIcmdWith3VectorAndUnit("/field/setField",this);
