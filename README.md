@@ -31,6 +31,16 @@ CMake
 
 ### Build and Run
 
+first setup the enviromental variables in the lyon serves for Geant4 :
+...
+source /gridgroup/ilc/CommonSoft/Geant4/init_compil_v11.1.1.sh
+source /gridgroup/ilc/CommonSoft/Geant4/v11.1.1/bin/geant4.sh
+export G4LEDATA=$GEANT4_DATA_DIR/G4EMLOW8.2_ONERA
+...
+if you want run ROOT :
+...
+source /gridgroup/ilc/CommonSoft/root/bin/thisroot.sh  
+...
 To build and run the simulation with the above packages installed, create and move to a build directory
 
 ```
